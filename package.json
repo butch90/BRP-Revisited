@@ -1,0 +1,30 @@
+{
+  "name": "aruba",
+  "version": "0.0.1",
+  "description": "package file for modules",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/butch90/Aruba.git"
+  },
+  "author": "marcus w",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/butch90/Aruba/issues"
+  },
+  "homepage": "https://github.com/butch90/Aruba#readme",
+  "dependencies": {
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "debug": "*",
+    "express": "*",
+    "serve-favicon": "*",
+    "mongoose": "*",
+    "mongo-express": "*",
+    "gulp": "*",
+    "gulp-less": "*"
+  }
+}
