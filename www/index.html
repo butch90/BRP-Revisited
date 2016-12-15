@@ -51,16 +51,12 @@
 </head>
 
     <body>	
-    	<div class="wrapper">
-    	
-			<navbar></navbar>
-	   
-		</div>
+
+		<navbar></navbar>
+	  
 		<div ng-controller="showCtrl">
-			<div ng-hide="currentPath === '/members'">
-				<div ng-hide="currentPath === '/photos'">
-					<carousel></carousel>
-				</div>
+			<div ng-show="currentPath === '/'">
+				<carousel></carousel>
 			</div>
 		</div>
 

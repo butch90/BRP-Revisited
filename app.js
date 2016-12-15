@@ -1,44 +1,52 @@
-// Require modules
-var m = {};
-[
-	"express",
-	"path",
-	"serve-favicon",
-	"cookie-parser",
-	"body-parser",
-	"gulp",
-	//"mongresto"
-].forEach(function(x){
-	// store required modules in m
-	m[x.replace(/\W/g,'')] = require(x);
-});
+m = {
+    fs: require('fs'),
+    path: require('path'),
+};
+g = {};
 
-// Standard Express boiler plate code
-var app = m.express();
-//app.use(favicon(__dirname + '/www/favicon.ico'));
-app.use(m.bodyparser.json());
-app.use(m.bodyparser.urlencoded({ extended: false }));
-app.use(m.cookieparser());
-app.use(m.express.static(m.path.join(__dirname, 'www')));
+for(key in require('./package.json').dependencies){
+    m[key.replace(/\W/g,'')] = require(key);
+}
 
-var options = {
-	// The MongoDB database to connect to
-	dbName: "brp",
+var appRoot = m.path.normalize(__dirname +'/');
+
+g.settings = {
+  appRoot: appRoot,
+  modelDir: m.path.join(appRoot, 'schemas/'),
+  Server: {
+    port: 3000,
+    endpoint: '*',
+    webRoot: 'www'
+  },
+  classes: [
+    'Mongo',
+    'Server',
+    'Login',
+    'Users',
+    'Fs',
+  ],
+  Login: {
+    route: '/api/login/:id?'
+  },
+  User: {
+    route: '/api/user/:id?'
+  }
 };
 
-// start mongresto
-//m.mongresto.init(app, options);
-// start gulp LESS watch
-require('./gulpfile.js');
-m.gulp.start('watch');
+var options = m.multer.diskStorage({
+  destination: g.settings.appRoot + '/uploads',
+  filename: function (req, file, cb) {
+    cb(null, (m.path.basename(file.originalname) + m.path.extname(file.originalname)));
+  }
+})
+var upload = m.multer({storage: options});
 
-// Route everything "else" (not "/api/**/*") to angular (in html5mode)
-app.get('*', function (req, res) {
-	res.sendFile('index.html', {root: './www'});
+m.upload = upload;
+
+g.classes = {};
+g.settings.classes.forEach((x)=>{
+    g.classes[x] = require(m.path.join(g.settings.appRoot + 'classes/' + x + '.class.js'));
 });
 
-// Start up
-var port = 3000;
-app.listen(port, function(){
-	console.log("Express server listening on port " + port);
-});
+// Start server
+new g.classes.Server();
